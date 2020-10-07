@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-hans" style="height: 100%;">
+
+<head>
+    <meta charset="utf-8" />
+    <title>二手书交易平台-注册</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdui@1.0.0/dist/css/mdui.min.css"
+        integrity="sha384-2PJ2u4NYg6jCNNpv3i1hK9AoAqODy6CdiC+gYiL2DVx+ku5wzJMFNdE3RoWfBIRP" crossorigin="anonymous" />
+    <script src="https://cdn.jsdelivr.net/npm/mdui@1.0.0/dist/js/mdui.min.js"
+        integrity="sha384-aB8rnkAu/GBsQ1q6dwTySnlrrbhqDwrDnpVHR2Wgm8pWLbwUnzDcIROX3VvCbaK+"
+        crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <script>
+        window.onload = function () {
+            document.getElementById('register-btn').addEventListener('click', function () {
+                password = document.getElementById('password-input').value;
+                password_repeat = document.getElementById('repeat-password-input').value;
+                if (password !== password_repeat) {
+                    alert('两次密码输入不一致，请重新输入！');
+                    return;
+                }
+                account = document.getElementById('account-input').value;
+                phone_number = document.getElementById('phone-number-input').value;
+                username = document.getElementById('username-input').value;
+                if (account === "" | phone_number === "" | username === "" | password === "" | password_repeat === "") {
+                    alert("输入不能为空!");
+                    return;
+                }
+
+                axios.post('../s/validation/register/', {
+                    account: account,
+                    password: password,
+                    phone_number: phone_number,
+                    username: username,
+                })
+                    .then(function (response) {
+                        console.log(response);
+                        let data = response.data;
+                        if (data.status) {
+                            alert("注册成功，请重新登录！");
+                            window.location = "../";
+                        } else {
+                            alert("注册失败，用户名已存在，请重试！");
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+
+            }, false);
+        }
+
+
+    </script>
+    <style>
+        .register-container {
+            margin: auto;
+            width: 480px;
+            height: 400px;
+        }
+
+        .submit-button-container {
+            text-align: center;
+        }
+
+        .submit-button {
+            display: inline-block;
+            width: 200px;
+        }
+
+        .input-container {
+            padding-top: 20px;
+            padding-left: 40px;
+            padding-right: 40px;
+            padding-bottom: 20px;
+        }
+    </style>
+
+</head>
+
+<body style="height: 100%;">
+    <div class="mdui-toolbar mdui-color-pink">
+        <span class="mdui-typo-headline" style="padding-left: 5%;">注册-register</span>
+    </div>
+
+    <div class="mdui-color-pink-50" style="min-height: 100%;">
+        <div style="height: 120px; text-align: center; padding-top: 80px;">
+            <span class="mdui-typo-title" style="font-size: 50px; color: #e91e63;">注册</span>
+        </div>
+        <div class="mdui-card register-container mdui-color-pink-200">
+            <div class="input-container">
+                <div class="mdui-textfield">
+                    <input class="mdui-textfield-input" type="text" placeholder="Account" id="account-input" />
+                </div>
+                <div class="mdui-textfield">
+                    <input class="mdui-textfield-input" type="text" placeholder="Password" id="password-input" />
+                </div>
+
+                <div class="mdui-textfield">
+                    <input class="mdui-textfield-input" type="text" placeholder="Repeat Password"
+                        id="repeat-password-input" />
+                </div>
+
+
+                <div class="mdui-textfield">
+                    <input class="mdui-textfield-input" type="text" placeholder="Phone Number"
+                        id="phone-number-input" />
+                </div>
+
+                <div class="mdui-textfield">
+                    <input class="mdui-textfield-input" type="text" placeholder="User Name" id="username-input" />
+                </div>
+                <div style="height: 30px;">
+                </div>
+
+                <div class="submit-button-container">
+                    <button class="mdui-btn mdui-color-pink-300 submit-button" id="register-btn">注册</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- <footer class="mdui-color-pink-200" style="min-height: 100px;">hello</footer> -->
+    </div>
+</body>
+
+</html>

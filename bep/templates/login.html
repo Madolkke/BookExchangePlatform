@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-hans" style="height: 100%;">
+
+<head>
+    <title>二手书交易平台-登录</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdui@1.0.0/dist/css/mdui.min.css"
+        integrity="sha384-2PJ2u4NYg6jCNNpv3i1hK9AoAqODy6CdiC+gYiL2DVx+ku5wzJMFNdE3RoWfBIRP" crossorigin="anonymous" />
+    <script src="https://cdn.jsdelivr.net/npm/mdui@1.0.0/dist/js/mdui.min.js"
+        integrity="sha384-aB8rnkAu/GBsQ1q6dwTySnlrrbhqDwrDnpVHR2Wgm8pWLbwUnzDcIROX3VvCbaK+"
+        crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <script>
+        function getCookie(c_name) {
+            if(document.cookie.length > 0){
+                c_start = document.cookie.indexOf(c_name + "=");
+                if(c_start != -1){
+                    c_start = c_start + c_name.length + 1;
+                    c_end = document.cookie.indexOf(";", c_start);
+                    if(c_end == -1){
+                        c_end = document.cookie.length;
+                    }
+                    return unescape(document.cookie.substring(c_start, c_end));
+                }
+            }
+            return ""
+        }
+        window.onload = function () {
+            document.getElementById('register-btn').addEventListener('click', function () {
+                window.location = "./register";
+
+            }, false);
+
+
+            document.getElementById("login-btn").addEventListener('click', function () {
+                let account = document.getElementById("account-input").value;
+                let password = document.getElementById("password-input").value;
+                if (account === "") {
+                    alert("用户名不能为空，请重新输入");
+                }
+                if (account === "") {
+                    alert("密码不能为空，请重新输入");
+                }
+                axios.post('./s/validation/login/', {
+                    account: account,
+                    password: password
+                })
+                    .then(function (response) {
+                        console.log(response.data);
+                        let data = response.data;
+                        if (data.status) {
+                            document.cookie = "SESSION=" + data.session
+                            alert("登录成功！");
+                            window.location = "./index/page/1"
+                        } else {
+                            alert("用户名或密码错误，请重新输入！");
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+
+            }, false);
+        }
+
+
+    </script>
+    <style>
+        .login-container {
+            margin: auto;
+            width: 480px;
+            height: 270px;
+        }
+
+        .submit-button-container {
+            text-align: center;
+        }
+
+        .submit-button {
+            display: inline-block;
+            width: 150px;
+        }
+
+        .input-container {
+            padding-top: 20px;
+            padding-left: 40px;
+            padding-right: 40px;
+            padding-bottom: 20px;
+        }
+    </style>
+
+</head>
+
+<body style="height: 100%;">
+    <div class="mdui-toolbar mdui-color-pink">
+        <span class="mdui-typo-headline" style="padding-left: 5%;">登录-login</span>
+    </div>
+
+    <div class="mdui-color-pink-50" style="min-height: 100%;">
+        <div style="height: 120px; text-align: center; padding-top: 80px;">
+            <span class="mdui-typo-title" style="font-size: 50px; color: #e91e63;">登录</span>
+        </div>
+        <div class="mdui-card login-container mdui-color-pink-200">
+            <div class="input-container">
+                <div class="mdui-textfield">
+                    <input class="mdui-textfield-input" type="text" placeholder="Account" id="account-input" />
+                </div>
+                <div style="height: 20px;"></div>
+                <div class="mdui-textfield">
+                    <input class="mdui-textfield-input" type="text" placeholder="Password" id="password-input" />
+                </div>
+            </div>
+
+            <div class="submit-button-container">
+                <button class="mdui-btn mdui-color-pink-300 submit-button" id="register-btn">注册</button>
+                <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <button class="mdui-btn mdui-color-pink-400 submit-button" id="login-btn">登录</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- <footer class="mdui-color-pink-200" style="min-height: 100px;">hello</footer> -->
+</body>
+
+</html>

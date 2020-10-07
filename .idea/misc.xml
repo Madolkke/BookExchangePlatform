@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectPlainTextFileTypeManager">
+    <file url="file://$PROJECT_DIR$/bep/migrations/0001_initial.py" />
+    <file url="file://$PROJECT_DIR$/bep/migrations/0002_auto_20200929_0958.py" />
+    <file url="file://$PROJECT_DIR$/bep/migrations/0003_auto_20200929_1014.py" />
+    <file url="file://$PROJECT_DIR$/bep/migrations/0004_auto_20200929_1441.py" />
+    <file url="file://$PROJECT_DIR$/bep/migrations/0005_auto_20201004_2221.py" />
+  </component>
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.7 (BookExchangePlatform)" project-jdk-type="Python SDK" />
+</project>

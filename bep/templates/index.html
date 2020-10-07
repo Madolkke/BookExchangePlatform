@@ -1,0 +1,137 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh-hans" style="height: 100%;">
+
+<head>
+    <title>二手书交易平台-目录</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdui@1.0.0/dist/css/mdui.min.css"
+        integrity="sha384-2PJ2u4NYg6jCNNpv3i1hK9AoAqODy6CdiC+gYiL2DVx+ku5wzJMFNdE3RoWfBIRP" crossorigin="anonymous" />
+    <script src="https://cdn.jsdelivr.net/npm/mdui@1.0.0/dist/js/mdui.min.js"
+        integrity="sha384-aB8rnkAu/GBsQ1q6dwTySnlrrbhqDwrDnpVHR2Wgm8pWLbwUnzDcIROX3VvCbaK+"
+        crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <script>
+        var page_number = "{{ page_number }}"
+        function getCookie(c_name) {
+            if (document.cookie.length > 0) {
+                c_start = document.cookie.indexOf(c_name + "=");
+                if (c_start != -1) {
+                    c_start = c_start + c_name.length + 1;
+                    c_end = document.cookie.indexOf(";", c_start);
+                    if (c_end == -1) {
+                        c_end = document.cookie.length;
+                    }
+                    return unescape(document.cookie.substring(c_start, c_end));
+                }
+            }
+            return ""
+        }
+
+        window.onload = function () {
+            document.getElementById("personal-information-btn").addEventListener('click', function () {
+                window.location = "/personal_info";
+            }, false);
+            document.getElementById("last-page-btn").addEventListener('click', function(){
+                window.location = "/index/page/{{ previous_page_number }}";
+            }, false);
+            document.getElementById("next-page-btn").addEventListener('click', function(){
+                window.location = "/index/page/{{ next_page_number }}"; 
+            }, false);
+        }
+    </script>
+    <style>
+        .paginator-button-container {
+            text-align: center;
+        }
+
+        .paginator-button {
+            display: inline-block;
+        }
+
+        .book-container {}
+
+        .head-container {
+            min-height: 100px;
+            width: 700px;
+            margin: 0 auto;
+        }
+        .book-card-container{
+            margin-bottom: 30px;
+        }
+        .bottom-space{
+            height: 100px;
+        }
+    </style>
+
+</head>
+
+<body style="height: 100%;">
+    <div class="mdui-toolbar mdui-color-pink">
+        <span class="mdui-typo-headline" style="padding-left: 5%;">图书信息-第{{ page_number }}页</span>
+        <div class="mdui-toolbar-spacer"></div>
+        <button class="mdui-btn-icon mdui-btn mdui-ripple" id="personal-information-btn">
+            <i class="mdui-icon material-icons">account_circle</i>
+        </button>
+    </div>
+
+    <div class="mdui-color-pink-50" style="min-height: 100%;">
+        <div class="head-container">
+            <div class="mdui-textfield">
+                <i class="mdui-icon material-icons">search</i>
+                <input class="mdui-textfield-input" placeholder="Search"/>
+              </div>
+        </div>
+
+        <div class="book-container ">
+            <div class="mdui-container">
+                <div class="mdui-row">
+                    {% for book in books %}
+                    <div class="mdui-col-xs-4 book-card-container">
+                        <div class="mdui-card mdui-color-pink-100">
+                            <div class="mdui-card-media">
+                                <img src="/media/{{ book.cover }}" />
+                                <div class="mdui-card-media-covered">
+                                    <div class="mdui-card-primary">
+                                        <div class="mdui-card-primary-title" onclick="window.location.href = '/detail/book/{{ book.id }}'">{{ book.name }}</div>
+                                        <div class="mdui-card-primary-subtitle">{{ book.author }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+        </div>
+
+        <div class="bottom-space"></div>
+
+
+        <div class="paginator-button-container">
+            {% if has_previous %}
+            <button class="mdui-btn mdui-color-pink-400 paginator-button" id="last-page-btn">
+                <i class="mdui-icon material-icons">navigate_before</i>
+                上一页
+            </button>
+            {% endif %}
+            <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            {% if has_next %}
+            <button class="mdui-btn mdui-color-pink-400 paginator-button" id="next-page-btn">
+                下一页
+                <i class="mdui-icon material-icons">navigate_next</i>
+            </button>
+            {% endif %}
+        </div>
+        <div class="bottom-space"></div>
+    </div>
+
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-hans" style="height: 100%;">
+
+<head>
+    <meta charset="utf-8" />
+    <title>二手书交易平台-发布图书</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdui@1.0.0/dist/css/mdui.min.css"
+        integrity="sha384-2PJ2u4NYg6jCNNpv3i1hK9AoAqODy6CdiC+gYiL2DVx+ku5wzJMFNdE3RoWfBIRP" crossorigin="anonymous" />
+    <script src="https://cdn.jsdelivr.net/npm/mdui@1.0.0/dist/js/mdui.min.js"
+        integrity="sha384-aB8rnkAu/GBsQ1q6dwTySnlrrbhqDwrDnpVHR2Wgm8pWLbwUnzDcIROX3VvCbaK+"
+        crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <script>
+        function getCookie(c_name) {
+            if (document.cookie.length > 0) {
+                c_start = document.cookie.indexOf(c_name + "=");
+                if (c_start != -1) {
+                    c_start = c_start + c_name.length + 1;
+                    c_end = document.cookie.indexOf(";", c_start);
+                    if (c_end == -1) {
+                        c_end = document.cookie.length;
+                    }
+                    return unescape(document.cookie.substring(c_start, c_end));
+                }
+            }
+            return ""
+        }
+        function getCheckedBookType() {
+            let need = document.getElementById("need-book-radio");
+            return need.checked;
+        }
+
+
+        window.onload = function () {
+            document.getElementById("choose-img-btn").addEventListener("click", function () {
+                document.getElementById("choose-img-input").click();
+            }, false);
+            document.getElementById("back-index-btn").addEventListener("click", function () {
+                window.location = "/index/page/1";
+            }, false);
+            document.getElementById("submit-btn").addEventListener("click", function () {
+                var file = document.getElementById("choose-img-input").files[0];
+                var img_formdata = new FormData();
+                img_formdata.append('img', file);
+                let config = {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                };
+                
+                img_formdata.append('name', document.getElementById("book-name-input").value);
+                img_formdata.append('price', document.getElementById("book-price-input").value);
+                img_formdata.append('author', document.getElementById("book-author-input").value);
+                img_formdata.append('isbn', document.getElementById("book-isbn-input").value);
+                img_formdata.append('is_need', getCheckedBookType());
+                img_formdata.append('session', getCookie("SESSION"));
+
+                
+                
+                axios.post('/s/create_book/', img_formdata, config)
+                    .then(function (response) {
+                        let data = response.data;
+                        if(data.status){
+                            alert("图书创建成功！");
+                            window.location = "/index/page/1";
+                        }else{
+                            alert("图书创建失败，请重试!");
+                        }
+                        console.log(response.data);
+                    })
+                    .catch(function(error){
+                        console.log(error);
+                    })
+            })
+
+
+
+        }
+
+
+    </script>
+    <style>
+        .book-info-container {
+            margin: auto;
+            width: 480px;
+            height: 500px;
+        }
+
+        .submit-button-container {
+            text-align: center;
+        }
+
+        .input-container {
+            padding-top: 20px;
+            padding-left: 40px;
+            padding-right: 40px;
+            padding-bottom: 20px;
+        }
+
+        #choose-img-input {
+            display: none;
+        }
+
+        .bottom-space {
+            height: 200px;
+        }
+    </style>
+
+</head>
+
+<body style="height: 100%;">
+    <div class="mdui-toolbar mdui-color-pink">
+        <span class="mdui-typo-headline" style="padding-left: 5%;">发布图书</span>
+        <div class="mdui-toolbar-spacer"></div>
+        <button class="mdui-btn-icon mdui-btn mdui-ripple" id="back-index-btn">
+            <i class="mdui-icon material-icons">home</i>
+        </button>
+    </div>
+
+    <div class="mdui-color-pink-50" style="min-height: 100%;">
+        <div style="height: 120px; text-align: center; padding-top: 80px;">
+            <span class="mdui-typo-title" style="font-size: 50px; color: #e91e63;">发布图书</span>
+        </div>
+
+        <div class="mdui-card book-info-container mdui-color-pink-200">
+            <div class="input-container">
+
+                <div class="mdui-textfield">
+                    <input class="mdui-textfield-input" type="text" placeholder="Book Name" id="book-name-input" />
+                </div>
+
+                <div class="mdui-textfield">
+                    <input class="mdui-textfield-input" type="text" placeholder="Book Price" id="book-price-input" />
+                </div>
+
+                <div class="mdui-textfield">
+                    <input class="mdui-textfield-input" type="text" placeholder="ISBN" id="book-isbn-input" />
+                </div>
+
+                <div class="mdui-textfield">
+                    <input class="mdui-textfield-input" type="text" placeholder="Book Author" id="book-author-input" />
+                </div>
+
+                <div style="height: 30px;">
+                    <input accept="image/*" id="choose-img-input" type="file">
+                </div>
+
+                <form>
+                    <label class="mdui-radio">
+                        <input type="radio" name="book-type" checked id="need-book-radio" />
+                        <i class="mdui-radio-icon"></i>
+                        Need
+                    </label>
+                    <span style="width: 5px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    <label class="mdui-radio">
+                        <input type="radio" name="book-type" id="sell-book-radio" />
+                        <i class="mdui-radio-icon"></i>
+                        Sell
+                    </label>
+                </form>
+
+
+
+                <div class="submit-btn-container">
+                    <button class="mdui-btn mdui-color-pink-300 mdui-btn-block" id="choose-img-btn">Choose
+                        Image</button>
+                    <div style="height: 10px;"></div>
+                    <button class="mdui-btn mdui-color-pink-300 mdui-btn-block" id="submit-btn">Submit</button>
+                </div>
+            </div>
+        </div>
+        <div class="bottom-space">&nbsp;</div>
+    </div>
+
+</body>
+
+</html>

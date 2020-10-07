@@ -1,0 +1,252 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh-hans" style="height: 100%;">
+
+<head>
+    <title>二手书交易平台-目录</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdui@1.0.0/dist/css/mdui.min.css"
+        integrity="sha384-2PJ2u4NYg6jCNNpv3i1hK9AoAqODy6CdiC+gYiL2DVx+ku5wzJMFNdE3RoWfBIRP" crossorigin="anonymous" />
+    <script src="https://cdn.jsdelivr.net/npm/mdui@1.0.0/dist/js/mdui.min.js"
+        integrity="sha384-aB8rnkAu/GBsQ1q6dwTySnlrrbhqDwrDnpVHR2Wgm8pWLbwUnzDcIROX3VvCbaK+"
+        crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <script>
+        function getCookie(c_name) {
+            if (document.cookie.length > 0) {
+                c_start = document.cookie.indexOf(c_name + "=");
+                if (c_start != -1) {
+                    c_start = c_start + c_name.length + 1;
+                    c_end = document.cookie.indexOf(";", c_start);
+                    if (c_end == -1) {
+                        c_end = document.cookie.length;
+                    }
+                    return unescape(document.cookie.substring(c_start, c_end));
+                }
+            }
+            return ""
+        }
+
+        function renew(account_balance, phone_number, address, name, account) {
+            let account_balance_displayer = document.getElementById("account-balance-displayer");
+            let phone_number_displayer = document.getElementById("phone-number-displayer");
+            let address_displayer = document.getElementById("address-displayer");
+            let name_displayer = document.getElementById("name-displayer");
+            let account_displayer = document.getElementById("account-displayer");
+            account_balance_displayer.innerHTML = account_balance + "￥";
+            phone_number_displayer.innerHTML = phone_number;
+            address_displayer.innerHTML = address;
+            name_displayer.innerHTML = name;
+            account_displayer.innerHTML = "@" + account;
+        }
+
+        var session = getCookie("SESSION");
+
+        window.onload = function () {
+            axios.post("/s/personal_info/", {
+                session: getCookie("SESSION")
+            })
+                .then(function (response) {
+                    console.log(response);
+                    let data = response.data;
+                    if (data.status) {
+                        renew(data.account_balance, data.phone_number, data.address, data.name, data.account);
+                    } else {
+                        alert("信息获取失败，请重试！");
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            document.getElementById("deposit-btn").addEventListener('click', function () {
+                axios.post("/s/deposit_50/", {
+                    session: getCookie("SESSION")
+                })
+                    .then(function (response) {
+                        console.log(response);
+                        let data = response.data;
+                        if (data.status) {
+                            alert("充值成功！");
+                            axios.post("/s/personal_info/", {
+                                session: getCookie("SESSION")
+                            })
+                                .then(function (response) {
+                                    console.log(response);
+                                    let data = response.data;
+                                    if (data.status) {
+                                        renew(data.account_balance, data.phone_number, data.address, data.name, data.account);
+                                    } else {
+                                        alert("信息获取失败，请重试！");
+                                    }
+                                })
+                                .catch(function (error) {
+                                    console.log(error);
+                                });
+                        }
+                    })
+                    .catch(function (error) {
+
+                    });
+            }, false);
+
+            document.getElementById("back-index-btn").addEventListener('click', function () {
+                window.location = "/index/page/1";
+            }, false);
+
+            document.getElementById("refresh-btn").addEventListener('click', function () {
+                axios.post("/s/personal_info/", {
+                    session: getCookie("SESSION")
+                })
+                    .then(function (response) {
+                        console.log(response);
+                        let data = response.data;
+                        if (data.status) {
+                            renew(data.account_balance, data.phone_number, data.address, data.name, data.account);
+                        } else {
+                            alert("信息获取失败，请重试！");
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }, false);
+            
+            document.getElementById("create-book-btn").addEventListener('click', function() {
+                window.location = "/create_book";
+            }, false);
+        }
+    </script>
+    <style>
+        .info-container {
+            min-height: 500px;
+            width: 70%;
+            margin: 0 auto;
+        }
+
+        .head-space {
+            height: 150px;
+        }
+
+        .pink-body {
+            min-height: 100%;
+        }
+
+        .avatar-container {
+            top: -20%;
+            left: 10%;
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+
+        .avatar {
+            width: auto;
+            height: auto;
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .acname-displayer {
+            margin-top: 20px;
+            width: 65%;
+            position: absolute;
+            right: 0;
+        }
+
+        #name-displayer {
+            font-size: 40px;
+            color: #6b5c64;
+        }
+
+        #account-displayer {
+            font-size: 20px;
+            color: #836f79;
+        }
+
+        .detail-displayer {
+            position: absolute;
+            top: 30%;
+            font-size: 30px;
+            margin: 0 auto;
+            left: 15%;
+            color: #ec4079b6;
+        }
+
+        #deposit-btn {
+            position: absolute;
+            bottom: 10%;
+            width: 70%;
+            margin-left: 15%;
+            height: 10%;
+            font-size: 20px;
+        }
+        #create-book-btn {
+            position: absolute;
+            bottom: 25%;
+            width: 70%;
+            margin-left: 15%;
+            height: 10%;
+            font-size: 20px;
+        }
+    </style>
+
+</head>
+
+<body style="height: 100%;">
+    <div class="mdui-appbar">
+        <div class="mdui-toolbar mdui-color-pink">
+            <span class="mdui-typo-headline" style="padding-left: 5%;">个人信息</span>
+            <div class="mdui-toolbar-spacer"></div>
+            <button class="mdui-btn-icon mdui-btn mdui-ripple" id="back-index-btn">
+                <i class="mdui-icon material-icons">home</i>
+            </button>
+            <button class="mdui-btn-icon mdui-btn mdui-ripple" id="refresh-btn">
+                <i class="mdui-icon material-icons">refresh</i>
+            </button>
+
+        </div>
+    </div>
+
+    <div class="mdui-color-pink-50 pink-body">
+        <div class="head-space"></div>
+
+        <div class="info-container mdui-card mdui-color-pink-100" style="overflow: visible;">
+            <div class="avatar-container">
+                <img class="avatar" src="{% static "touxiang_sample.jpg" %}">
+            </div>
+            <div class="acname-displayer">
+                <span id="name-displayer">Your Nickname</span>
+                <div style="width: 10px;"></div>
+                <span id="account-displayer">Your account</span>
+            </div>
+
+            <div class="detail-displayer">
+                <div class="account-balance-container">
+                    <span>余额</span>
+                    <i class="mdui-icon material-icons">account_balance_wallet</i>
+                    <span id="account-balance-displayer">0.00￥</span>
+                </div>
+                <div style="height: 15px;"></div>
+                <div class="address-container">
+                    <span>地址</span>
+                    <i class="mdui-icon material-icons">place</i>
+                    <span id="address-displayer">湖北省武汉市武汉大学信息学部1919舍114514号</span>
+                </div>
+                <div style="height: 15px;"></div>
+                <div class="phone-number-container">
+                    <span>号码</span>
+                    <i class="mdui-icon material-icons">phone_android</i>
+                    <span id="phone-number-displayer">1145141919</span>
+                </div>
+            </div>
+            <button class="mdui-btn mdui-btn-raised mdui-btn-block mdui-color-pink-200" id="deposit-btn">充值</button>
+            <button class="mdui-btn mdui-btn-raised mdui-btn-block mdui-color-pink-200" id="create-book-btn">创建图书</button>
+
+        </div>
+
+    </div>
+</body>
+
+</html>
