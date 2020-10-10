@@ -7,11 +7,15 @@ import hashlib
 
 
 class Book(models.Model):
+    class Meta:
+        ordering = ["pub_time"]
+
     id = models.AutoField(primary_key=True)
     publish_id = models.IntegerField(editable=False)
     name = models.CharField(max_length=50)
     price = models.DecimalField(max_digits=7, decimal_places=2)
     is_need = models.BooleanField(default=False)
+    is_sold = models.BooleanField(default=False)
     isbn = models.CharField(max_length=20, default="")
     author = models.CharField(max_length=50, default="")
     pub_time = models.DateTimeField(auto_now=True, editable=False)
@@ -21,8 +25,8 @@ class Book(models.Model):
 class Order(models.Model):
     id = models.AutoField(primary_key=True)
     book_id = models.IntegerField(editable=False)
-    owner_id = models.IntegerField(editable=False, unique=True)
-    purchaser_id = models.IntegerField(editable=False, unique=False)
+    owner_id = models.IntegerField(editable=False)
+    purchaser_id = models.IntegerField(editable=False)
     reserved_place = models.CharField(max_length=100)
     pub_time = models.DateTimeField(auto_now=True, editable=False)
 

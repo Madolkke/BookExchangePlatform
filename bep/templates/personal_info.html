@@ -114,6 +114,10 @@
             document.getElementById("create-book-btn").addEventListener('click', function() {
                 window.location = "/create_book";
             }, false);
+
+            document.getElementById("order-list-btn").addEventListener('click', function(){
+                window.location = "/orders/" + getCookie("SESSION");
+            }, false);
         }
     </script>
     <style>
@@ -176,7 +180,7 @@
 
         #deposit-btn {
             position: absolute;
-            bottom: 10%;
+            bottom: 23%;
             width: 70%;
             margin-left: 15%;
             height: 10%;
@@ -184,7 +188,16 @@
         }
         #create-book-btn {
             position: absolute;
-            bottom: 25%;
+            bottom: 12%;
+            width: 70%;
+            margin-left: 15%;
+            height: 10%;
+            font-size: 20px;
+        }
+
+        #order-list-btn{
+            position: absolute;
+            bottom: 1%;
             width: 70%;
             margin-left: 15%;
             height: 10%;
@@ -243,6 +256,7 @@
             </div>
             <button class="mdui-btn mdui-btn-raised mdui-btn-block mdui-color-pink-200" id="deposit-btn">充值</button>
             <button class="mdui-btn mdui-btn-raised mdui-btn-block mdui-color-pink-200" id="create-book-btn">创建图书</button>
+            <button class="mdui-btn mdui-btn-raised mdui-btn-block mdui-color-pink-200" id="order-list-btn">订单列表</button>
 
         </div>
 

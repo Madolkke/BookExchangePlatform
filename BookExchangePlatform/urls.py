@@ -19,7 +19,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.static import serve
 
-from bep.views import login_page, register_page, index_page, personal_info_page, create_book_page
+from bep.views import login_page, register_page, index_page, personal_info_page, create_book_page, book_detail, order_list_page
 
 urlpatterns = [
     path('', login_page),
@@ -27,6 +27,8 @@ urlpatterns = [
     path("index/page/<int:page_number>", index_page),
     path("personal_info/", personal_info_page),
     path("create_book", create_book_page),
+    path("detail/book/<int:book_id>", book_detail),
+    path("orders/<str:session_str>", order_list_page),
     path('admin/', admin.site.urls),
     path('s/', include('bep.urls')),
     url(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
